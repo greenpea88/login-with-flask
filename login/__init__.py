@@ -1,12 +1,15 @@
 from flask import Flask, render_template
 
-from session.auth import auth
-from session.main import main
+from login.auth import auth
+from login.extentions import login_manager
+from login.main import main
 
 
 def create_app():
     app = Flask(__name__)
     app.secret_key = 'secret'
+
+    # init_extensions(app)
 
     @app.route('/')
     def index():
@@ -16,3 +19,13 @@ def create_app():
     app.register_blueprint(auth, url_prefix="/auth")
 
     return app
+
+
+def init_extensions(app):
+    # flask-login 사용하기
+    login_manager.init_app(app)
+
+    # @login_manager.user_loader
+    # def load_user(user_id):
+    #     target_user = None
+
