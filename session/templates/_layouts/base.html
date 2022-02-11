@@ -5,7 +5,6 @@
     {% block extra_head %}{% endblock extra_head %}
 </head>
 <body>
-{{ current user }}
 <ul>
     <li>
         <a href="{{ url_for('index') }}">Home</a>
@@ -17,5 +16,10 @@
         <a href="{{ url_for('main.private_page') }}">private page</a>
     </li>
 </ul>
+<hr/>
+<div>
+    {% block main %}
+    {% endblock main %}
+</div>
 </body>
 </html>
