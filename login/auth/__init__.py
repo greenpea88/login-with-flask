@@ -1,4 +1,7 @@
-from flask import Blueprint, request, render_template
+from flask import Blueprint, request, render_template, url_for, redirect
+from flask_login import login_user, logout_user
+
+from login.models import user_pool, User
 
 auth = Blueprint('auth', __name__)
 
@@ -10,9 +13,29 @@ def login():
 
     else:
         # form 방식으로 받아올 때에는 form에, json 방식으로 받아올 때에는 json에 원하는 정보가 담겨있음
-        username = request.form.get('username')
+        email = request.form.get('email')
         password = request.form.get('password')
+        print(email, password)
+
+        target_user = None
+        for user in user_pool:
+            if user.get('email') == email and user.get('password') == password:
+                target_user = user
+
+        if not target_user:
+            return render_template('auth/login.html', error='grant failed')
+
+        user = User(target_user.get('id'), target_user.get('email'), target_user.get('name'), target_user.get('password'))
+
+        # flask login으로 login >> login 정보 세션 저장
+        login_user(user)
+
+    return redirect(url_for('index'))
 
 
-
+@auth.route('/logout', methods=['GET'])
+def logout():
+    # flask login으로 logout >> 사용자 정보 세션 삭제
+    logout_user()
+    return redirect(url_for('index'))
 

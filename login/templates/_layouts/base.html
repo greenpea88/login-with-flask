@@ -5,6 +5,7 @@
     {% block extra_head %}{% endblock extra_head %}
 </head>
 <body>
+{{ current_user }}
 <ul>
     <li>
         <a href="{{ url_for('index') }}">Home</a>
@@ -17,6 +18,9 @@
     </li>
     <li>
         <a href="{{ url_for('auth.login') }}">login</a>
+    </li>
+    <li>
+        <a href="{{ url_for('auth.logout') }}">logout</a>
     </li>
     <li>
         <a href="{{ url_for('main.session_page') }}">session</a>

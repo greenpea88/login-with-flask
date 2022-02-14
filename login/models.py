@@ -1,3 +1,13 @@
+user_pool = [
+    {
+        'id': 1,
+        'email': 'test@test.com',
+        'name': '테스트',
+        'password': 'secret'
+    },
+]
+
+
 class User:
     def __init__(self, id, email, name, password):
         self.id = id
