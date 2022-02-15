@@ -10,6 +10,7 @@ from login.main import main
 def create_app():
     app = Flask(__name__)
     app_config = config.get('dev')()
+    # flask의 설정값 사용 --> 1. .py file 2. 환경 변수 3. config object(class)를 이용해 설정 가능
     app.config.from_object(app_config)
     app_config.init_app(app)
 

@@ -1,4 +1,6 @@
-from flask import Blueprint, request, render_template, url_for, redirect
+from urllib.parse import urlencode
+
+from flask import Blueprint, request, render_template, url_for, redirect, current_app, abort
 from flask_login import login_user, logout_user
 
 from login.proxy import user_repo
@@ -30,6 +32,41 @@ def login():
         login_user(user)
 
     return redirect(safe_next_redirect)
+
+
+@auth.route('/login/authorize/<target>', methods=['GET'])
+def authorize(target):
+    # authorization code 받아오기
+    if target not in ['google', 'kakao']:
+        # error 발생시키기
+        return abort(404)
+
+    target = str.upper(target)
+
+    authorize_endpoint = current_app.config.get(f'{target}_AUTHORIZE_ENDPOINT')
+    client_id = current_app.config.get(f'{target}_CLIENT_ID')
+    redirect_uri = current_app.config.get(f'{target}_REDIRECT_URI')
+    response_type = "code"
+    scope = current_app.config.get(f'{target}_SCOPE')
+
+    query_string = urlencode(dict(
+        redirect_uri=redirect_uri,
+        client_id=client_id,
+        scope=scope,
+        response_type=response_type
+    ))
+
+    authorize_redirect = f'{authorize_endpoint}?{query_string}'
+
+    return redirect(authorize_redirect)
+
+
+@auth.route('/oauth/callback/google', methods=['GET'])
+def google_callback():
+    code = request.args.get('code')
+    # token_endpoint = current_app.config.get(f'}')
+
+    return code
 
 
 @auth.route('/logout', methods=['GET'])
