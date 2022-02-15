@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import login_user, logout_user
 
-from login.models import user_pool, User
+from login.proxy import user_repo
 
 auth = Blueprint('auth', __name__)
 
@@ -23,17 +23,10 @@ def login():
         if next:
             safe_next_redirect = next
 
-        target_user = None
-        for user in user_pool:
-            if user.get('email') == email and user.get('password') == password:
-                target_user = user
-
-        if not target_user:
+        user = user_repo.get_by_email(email, password)
+        if not user:
             return render_template('auth/login.html', error='grant failed')
 
-        user = User(target_user.get('id'), target_user.get('email'), target_user.get('name'), target_user.get('password'))
-
-        # flask login으로 login >> login 정보 세션 저장
         login_user(user)
 
     return redirect(safe_next_redirect)

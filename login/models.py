@@ -1,14 +1,9 @@
-user_pool = [
-    {
-        'id': 1,
-        'email': 'test@test.com',
-        'name': '테스트',
-        'password': 'secret'
-    },
-]
+from login.database import db
+
+from sqlalchemy import Column, Integer, String, Unicode
 
 
-class User:
+class UserEntity:
     def __init__(self, id, email, name, password):
         self.id = id
         self.email = email
@@ -33,3 +28,11 @@ class User:
     def __repr__(self):
         return f"USER: {self.id} = {self.name}"
 
+
+class User(db.Model):
+    __tablename__ = "users"
+
+    id = Column("id", Integer, primary_key=True)
+    name = Column("name", String, nullable=False)
+    email = Column("email", String, nullable=False, unique=True)
+    password = Column("password", Unicode, nullable=False)

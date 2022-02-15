@@ -1,17 +1,20 @@
 from flask import Flask, render_template
 
 from login.auth import auth
+from login.config import config
+from login.database import db
 from login.extentions import login_manager
 from login.main import main
-from login.models import user_pool, User
 
 
 def create_app():
     app = Flask(__name__)
-    
-    app.secret_key = 'secret'
+    app_config = config.get('dev')()
+    app.config.from_object(app_config)
+    app_config.init_app(app)
 
     init_extensions(app)
+    init_db(app)
 
     @app.route('/')
     def index():
@@ -27,14 +30,6 @@ def init_extensions(app):
     # flask-login 사용하기 >> app에 login manager 연결
     login_manager.init_app(app)
 
-    # 로그인된 사용자인지 판단하는 기능
-    @login_manager.user_loader
-    def load_user(user_id):
-        target_user = None
-        for user in user_pool:
-            if user.get('id') == user_id:
-                target_user = user
 
-        if target_user:
-            return User(target_user.get('id'), target_user.get('email'), target_user.get('name'), target_user.get('password'))
-
+def init_db(app):
+    db.init_app(app)
