@@ -83,6 +83,27 @@ def google_callback():
     return resp.json()
 
 
+@auth.route('/oauth/callback/kakao', methods=['GET'])
+def kakao_callback():
+    code = request.args.get('code')
+    token_endpoint = current_app.config.get('KAKAO_TOKEN_ENDPOINT')
+    client_id = current_app.config.get('KAKAO_CLIENT_ID')
+    client_secret = current_app.config.get('KAKAO_CLIENT_SECRET')
+    redirect_uri = current_app.config.get('KAKAO_REDIRECT_URI')
+    grant_type = 'authorization_code'
+
+    resp = requests.post(token_endpoint, data=dict(
+        code=code,
+        client_id=client_id,
+        client_secret=client_secret,
+        redirect_uri=redirect_uri,
+        grant_type=grant_type
+    ))
+
+    # return code
+    return resp.json()
+
+
 @auth.route('/logout', methods=['GET'])
 def logout():
     # flask login으로 logout >> 사용자 정보 세션 삭제

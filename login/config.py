@@ -14,12 +14,12 @@ class BaseConfig:
     GOOGLE_SCOPE = os.environ.get('GOOGLE_SCOPE')
     GOOGLE_AUTHORIZE_ENDPOINT = os.environ.get('GOOGLE_AUTHORIZE_ENDPOINT')
 
-    # KAKAO_REDIRECT_URI = os.environ.get('KAKAO_CLIENT_ID')
-    # KAKAO_CLIENT_ID = os.environ.get('KAKAO_CLIENT_ID')
-    # KAKAO_CLIENT_SECRET = os.environ.get('KAKAO_CLIENT_ID')
-    # KAKAO_TOKEN_ENDPOINT = os.environ.get('KAKAO_CLIENT_ID')
-    # KAKAO_SCOPE = os.environ.get('KAKAO_CLIENT_ID')
-    # KAKAO_AUTHORIZE_ENDPOINT = os.environ.get('KAKAO_CLIENT_ID')
+    KAKAO_REDIRECT_URI = os.environ.get('KAKAO_REDIRECT_URI')
+    KAKAO_CLIENT_ID = os.environ.get('KAKAO_CLIENT_ID')
+    KAKAO_CLIENT_SECRET = os.environ.get('KAKAO_CLIENT_SECRET')
+    KAKAO_TOKEN_ENDPOINT = os.environ.get('KAKAO_TOKEN_ENDPOINT')
+    KAKAO_SCOPE = os.environ.get('KAKAO_SCOPE')
+    KAKAO_AUTHORIZE_ENDPOINT = os.environ.get('KAKAO_AUTHORIZE_ENDPOINT')
 
     def init_app(self, app):
         pass
@@ -36,6 +36,7 @@ class DevelopmentConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
+    REPO_TYPE = 'DB'
 
     def init_app(self, app):
         pass
