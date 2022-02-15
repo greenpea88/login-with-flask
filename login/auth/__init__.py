@@ -1,3 +1,4 @@
+import requests
 from urllib.parse import urlencode
 
 from flask import Blueprint, request, render_template, url_for, redirect, current_app, abort
@@ -64,9 +65,22 @@ def authorize(target):
 @auth.route('/oauth/callback/google', methods=['GET'])
 def google_callback():
     code = request.args.get('code')
-    # token_endpoint = current_app.config.get(f'}')
+    token_endpoint = current_app.config.get('GOOGLE_TOKEN_ENDPOINT')
+    client_id = current_app.config.get('GOOGLE_CLIENT_ID')
+    client_secret = current_app.config.get('GOOGLE_CLIENT_SECRET')
+    redirect_uri = current_app.config.get('GOOGLE_REDIRECT_URI')
+    grant_type = 'authorization_code'
 
-    return code
+    resp = requests.post(token_endpoint, data=dict(
+        code=code,
+        client_id=client_id,
+        client_secret=client_secret,
+        redirect_uri=redirect_uri,
+        grant_type=grant_type
+    ))
+
+    # return code
+    return resp.json()
 
 
 @auth.route('/logout', methods=['GET'])
