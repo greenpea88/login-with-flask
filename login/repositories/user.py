@@ -1,4 +1,5 @@
-from login.models import UserEntity
+from login.database import db
+from login.models import UserEntity, User
 from login.repositories import BaseUserRepo
 
 
@@ -42,10 +43,24 @@ class MemUserRepo(BaseUserRepo):
 
 class DBUserRepo(BaseUserRepo):
     def get(self, user_id):
-        pass
+        user = db.session.query(User).get(user_id)
+        if user:
+            return UserEntity(
+                user.id,
+                user.email,
+                user.name,
+                user.password
+            )
 
     def get_by_email(self, email, password):
-        pass
+        user = db.session.query(User).filter(User.email == email).first()
+        if user:
+            return UserEntity(
+                user.id,
+                user.email,
+                user.name,
+                user.password
+            )
 
     def list(self):
         pass
