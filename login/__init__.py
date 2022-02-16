@@ -1,10 +1,13 @@
 from flask import Flask, render_template
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 from login.auth import auth
 from login.config import config
 from login.database import db, migrate
 from login.extentions import login_manager
 from login.main import main
+from login.models import User, Connection
 
 
 def create_app():
@@ -16,6 +19,10 @@ def create_app():
 
     init_extensions(app)
     init_db(app)
+
+    if app.debug:
+        # debug mode 일 때만 admin page를 만들도록
+        init_admin(app)
 
     @app.route('/')
     def index():
@@ -36,3 +43,8 @@ def init_db(app):
     db.init_app(app)
     migrate.init_app(app, db)
 
+
+def init_admin(app):
+    admin = Admin(app, name='flask login', template_mode='bootstrap3')
+    admin.add_view(ModelView(User, db.session))
+    admin.add_view(ModelView(Connection, db.session))
