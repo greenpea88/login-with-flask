@@ -81,6 +81,7 @@ def google_callback():
 
     # return code
     return resp.json()
+    # return redirect("/")
 
 
 @auth.route('/oauth/callback/kakao', methods=['GET'])

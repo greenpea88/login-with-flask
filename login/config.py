@@ -4,7 +4,7 @@ import os
 class BaseConfig:
     SECRET_KEY = 'secret'
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
     REPO_TYPE = 'MEM'
 
     GOOGLE_REDIRECT_URI = os.environ.get('GOOGLE_REDIRECT_URI')

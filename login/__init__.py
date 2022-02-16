@@ -2,7 +2,7 @@ from flask import Flask, render_template
 
 from login.auth import auth
 from login.config import config
-from login.database import db
+from login.database import db, migrate
 from login.extentions import login_manager
 from login.main import main
 
@@ -34,3 +34,5 @@ def init_extensions(app):
 
 def init_db(app):
     db.init_app(app)
+    migrate.init_app(app, db)
+
