@@ -53,7 +53,6 @@ class Connection(db.Model):
     provider_id = db.Column(db.String(255))
     provider_user_id = db.Column(db.String(255))
     access_token = db.Column(db.String(255))
-    refresh_token = db.Column(db.String(255))
     secret = db.Column(db.String(255))
     display_name = db.Column(db.String(255))
     profile_url = db.Column(db.String(512))

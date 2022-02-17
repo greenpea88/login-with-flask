@@ -8,7 +8,7 @@ import requests
 from flask import Blueprint, request, render_template, url_for, redirect, current_app, abort
 from flask_login import login_user, logout_user
 
-from login.models import User
+from login.models import User, Connection
 from login.database import db
 from login.proxy import user_repo
 
@@ -86,18 +86,13 @@ def google_callback():
     ))
 
     user_data = jwt.decode(resp.json()['id_token'], options={"verify_signature": False})
-    print(user_data)
-    pp = pprint.PrettyPrinter(indent=2)
-    pp.pprint(user_data)
 
     name = user_data['name']
     email = user_data['email']
     user = db.session.query(User).filter(User.email == email).first()
 
-    if user:
-        # 존재하는 user인 경우 로그인 시키기
-        login_user(user.to_entity())
-    else:
+    if not user:
+        # 존재하지 않는 user인 경우 회원가입 시켜주기
         user = User(
             name=name,
             email=email,
@@ -106,7 +101,16 @@ def google_callback():
         db.session.add(user)
         db.session.commit()
 
-    return redirect("/")
+    login_user(user.to_entity())
+
+    print(resp.json())
+    connection = Connection()
+    connection.provider_id = "google"
+    connection.user = user
+    connection.access_token = resp.json().get('access_token')
+    db.session.commit()
+
+    return redirect(url_for("index"))
 
 
 @auth.route('/oauth/callback/kakao', methods=['GET'])
