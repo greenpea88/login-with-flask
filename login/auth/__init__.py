@@ -1,7 +1,4 @@
-import base64
-import json
 import jwt
-import pprint
 from urllib.parse import urlencode
 
 import requests
