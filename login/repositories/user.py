@@ -22,11 +22,11 @@ class MemUserRepo(BaseUserRepo):
                 target_user.get('password')
             )
 
-    def get_by_email(self, email, password):
+    def get_by_email(self, email):
         target_user = None
 
         for user in self.data:
-            if user.get('email') == email and user.get('password') == password:
+            if user.get('email') == email:
                 target_user = user
 
         if target_user:
@@ -52,7 +52,7 @@ class DBUserRepo(BaseUserRepo):
                 user.password
             )
 
-    def get_by_email(self, email, password):
+    def get_by_email(self, email):
         user = db.session.query(User).filter(User.email == email).first()
         if user:
             return UserEntity(

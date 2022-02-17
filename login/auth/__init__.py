@@ -32,8 +32,8 @@ def login():
         if next:
             safe_next_redirect = next
 
-        user = user_repo.get_by_email(email, password)
-        if not user:
+        user = user_repo.get_by_email(email)
+        if user.password != password:
             return render_template('auth/login.html', error='grant failed')
 
         login_user(user)

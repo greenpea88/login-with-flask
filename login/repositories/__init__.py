@@ -8,7 +8,7 @@ class BaseUserRepo(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_by_email(self, email, password):
+    def get_by_email(self, email):
         raise NotImplementedError
 
     @abc.abstractmethod

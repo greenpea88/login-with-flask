@@ -16,12 +16,15 @@
     <li>
         <a href="{{ url_for('main.private_page') }}">private page</a>
     </li>
+    {% if not current_user.id %}
     <li>
         <a href="{{ url_for('auth.login') }}">login</a>
     </li>
+    {% else %}
     <li>
         <a href="{{ url_for('auth.logout') }}">logout</a>
     </li>
+    {% endif %}
     <li>
         <a href="{{ url_for('main.session_page') }}">session</a>
     </li>
