@@ -20,6 +20,7 @@ class BaseConfig:
     KAKAO_TOKEN_ENDPOINT = os.environ.get('KAKAO_TOKEN_ENDPOINT')
     KAKAO_SCOPE = os.environ.get('KAKAO_SCOPE')
     KAKAO_AUTHORIZE_ENDPOINT = os.environ.get('KAKAO_AUTHORIZE_ENDPOINT')
+    KAKAO_PROFILE_INFO_ENDPOINT = os.environ.get('KAKAO_PROFILE_INFO_ENDPOINT')
 
     def init_app(self, app):
         pass

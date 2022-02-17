@@ -103,7 +103,6 @@ def google_callback():
 
     login_user(user.to_entity())
 
-    print(resp.json())
     connection = Connection()
     connection.provider_id = "google"
     connection.user = user
@@ -130,8 +129,35 @@ def kakao_callback():
         grant_type=grant_type
     ))
 
-    # return code
-    return resp.json()
+    access_token = resp.json().get('access_token')
+    profile_info_endpoint = current_app.config.get('KAKAO_PROFILE_INFO_ENDPOINT')
+    profile_resp = requests.get(profile_info_endpoint,
+                                headers=dict(authorization=f'Bearer {access_token}'))
+    user_data = profile_resp.json()['kakao_account']
+
+    name = user_data['profile']['nickname']
+    email = user_data['email']
+    user = db.session.query(User).filter(User.email == email).first()
+
+    if not user:
+        # 존재하지 않는 user인 경우 회원가입 시켜주기
+        user = User(
+            name=name,
+            email=email,
+            password=""
+        )
+        db.session.add(user)
+        db.session.commit()
+
+    login_user(user.to_entity())
+
+    connection = Connection()
+    connection.provider_id = "kakao"
+    connection.user = user
+    connection.access_token = access_token
+    db.session.commit()
+
+    return redirect(url_for("index"))
 
 
 @auth.route('/logout', methods=['GET'])
