@@ -14,8 +14,10 @@ def authorize():
     # It can be done with a redirection to the login page, or a login
     # form on this authorization page.
     if request.method == 'GET':
-        # get으로 들어오는 경우 >> auth code 받기
-        grant = oauth_server.get_consent_grant(end_user=current_user)
+        # get으로 들어오는 경우 >> 사용자로부터 consent 받기
+        # grant = oauth_server.get_consent_grant(end_user=current_user)
+        # 사용자에게 consent를 받는 부분
+        grant = oauth_server.validate_consent_request(end_user=current_user)
         client = grant.client
         scope = client.get_allowed_scope(grant.request.scope)
         # redirect uri는 필요하지 않은가?
@@ -31,6 +33,9 @@ def authorize():
             scopes=scope,
         )
     # post로 들어오는 경우 >> implicit grants 부분???
+    # form에 동의하시겠습니까? -> 동의했는지의 여부를 서버로 보내줘야하기 때문에
+    # client setting >> consent를 받는지 여부에 따라서 달라지는 부분
+    # option : skip_content = true 이런 식으로
     confirmed = request.form['confirm']
     if confirmed:
         # granted by resource owner

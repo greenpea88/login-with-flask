@@ -15,7 +15,6 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     next = request.form.get('next', '')  # login 후 이동할 페이지 지정
-    print(next)
 
     if request.method == 'GET':
         return render_template('auth/login.html')
@@ -30,12 +29,11 @@ def login():
             safe_next_redirect = next
 
         user = user_repo.get_by_email(email)
-        if user.password != password:
-            return render_template('auth/login.html', error='grant failed')
+        if user.password == password:
+            login_user(user)
+            return redirect(safe_next_redirect)
 
-        login_user(user)
-
-    return redirect(safe_next_redirect)
+    return render_template('auth/login.html', next=next)
 
 
 @auth.route('/login/authorize/<target>', methods=['GET'])
