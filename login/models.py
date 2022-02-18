@@ -1,6 +1,9 @@
+from sqlalchemy.orm import relationship
+
 from login.database import db
 
-from sqlalchemy import Column, Integer, String, Unicode
+from sqlalchemy import Column, Integer, String, Unicode, ForeignKey
+from authlib.integrations.sqla_oauth2 import OAuth2ClientMixin, OAuth2TokenMixin
 
 
 class UserEntity:
@@ -57,3 +60,19 @@ class Connection(db.Model):
     display_name = db.Column(db.String(255))
     profile_url = db.Column(db.String(512))
     image_url = db.Column(db.String(512))
+
+
+class Client(db.Model, OAuth2ClientMixin):
+    id = Column(Integer, primary_key=True)
+    user_id = Column(
+        Integer, ForeignKey(User.id, ondelete='CASCADE')
+    )
+    user = relationship('User')
+
+
+class Token(db.Model, OAuth2TokenMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer, db.ForeignKey(User.id, ondelete='CASCADE')
+    )
+    user = db.relationship('User')

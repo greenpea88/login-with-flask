@@ -8,6 +8,7 @@ from login.database import db, migrate
 from login.extentions import login_manager
 from login.main import main
 from login.models import User, Connection
+from login.oauth import oauth
 
 
 def create_app():
@@ -30,6 +31,7 @@ def create_app():
 
     app.register_blueprint(main, url_prefix="/main")
     app.register_blueprint(auth, url_prefix="/auth")
+    app.register_blueprint(oauth, url_prefix="/oauth")
 
     return app
 
