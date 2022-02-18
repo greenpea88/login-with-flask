@@ -1,5 +1,6 @@
 from login.database import db
-from login.models import UserEntity, User
+from login.models import User
+from login.domain.user import UserEntity
 from login.repositories import BaseUserRepo
 
 

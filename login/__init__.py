@@ -7,8 +7,9 @@ from login.config import config
 from login.database import db, migrate
 from login.extentions import login_manager
 from login.main import main
-from login.models import User, Connection
+from login.models import User, Connection, Client, Token, AuthorizationCode
 from login.oauth import oauth
+from login.oauth.server import oauth_server, query_client, save_token
 
 
 def create_app():
@@ -20,6 +21,7 @@ def create_app():
 
     init_extensions(app)
     init_db(app)
+    init_oauth(app)
 
     if app.debug:
         # debug mode 일 때만 admin page를 만들도록
@@ -46,7 +48,14 @@ def init_db(app):
     migrate.init_app(app, db)
 
 
+def init_oauth(app):
+    oauth_server.init_app(app, query_client=query_client, save_token=save_token)
+
+
 def init_admin(app):
     admin = Admin(app, name='flask login', template_mode='bootstrap3')
     admin.add_view(ModelView(User, db.session))
     admin.add_view(ModelView(Connection, db.session))
+    admin.add_view(ModelView(Client, db.session))
+    admin.add_view(ModelView(Token, db.session))
+    admin.add_view(ModelView(AuthorizationCode, db.session))
