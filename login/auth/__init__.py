@@ -14,15 +14,15 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    next = request.form.get('next', '')  # login 후 이동할 페이지 지정
 
     if request.method == 'GET':
-        return render_template('auth/login.html')
+        next = request.args.get('next', '') # login 후 이동할 페이지 지정
 
     else:
         # form 방식으로 받아올 때에는 form에, json 방식으로 받아올 때에는 json에 원하는 정보가 담겨있음
         email = request.form.get('email')
         password = request.form.get('password')
+        next = request.form.get('next')
         safe_next_redirect = url_for('index')
 
         if next:
