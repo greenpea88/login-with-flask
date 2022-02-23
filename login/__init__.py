@@ -9,6 +9,7 @@ from login.extentions import login_manager
 from login.main import main
 from login.models import User, Connection, Client, Token, AuthorizationCode
 from login.oauth import oauth
+from login.oauth.grants import RefreshTokenGrant, PasswordGrant
 from login.oauth.server import oauth_server, query_client, save_token
 
 
@@ -50,6 +51,9 @@ def init_db(app):
 
 def init_oauth(app):
     oauth_server.init_app(app, query_client=query_client, save_token=save_token)
+    oauth_server.register_grant(AuthorizationCode)
+    oauth_server.register_grant(PasswordGrant)
+    oauth_server.register_grant(RefreshTokenGrant)
 
 
 def init_admin(app):

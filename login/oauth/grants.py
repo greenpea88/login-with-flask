@@ -4,6 +4,7 @@ from login.models import AuthorizationCode, User
 from login.database import db
 
 
+# authorization code grant의 방식으로 인증
 class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
     def save_authorization_code(self, code, request):
         client = request.client
@@ -30,3 +31,29 @@ class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
 
     def authenticate_user(self, authorization_code):
         return db.session.query(User).get(authorization_code.user_id)
+
+
+# password grant 방식으로 인증
+class PasswordGrant(grants.ResourceOwnerPasswordCredentialsGrant):
+    def authenticate_user(self, username, password):
+        user = db.session.query(User).filter_by(username=username).first()
+        if user.check_password(password):
+            return user
+
+
+# refresh token을 이용해 access token 재발급
+class RefreshTokenGrant(grants.RefreshTokenGrant):
+    def authenticate_refresh_token(self, refresh_token):
+        item = db.session.query(User).filter_by(refresh_token=refresh_token).first()
+        # define is_refresh_token_valid by yourself
+        # usually, you should check if refresh token is expired and revoked
+        if item and item.is_refresh_token_valid():
+            return item
+
+    def authenticate_user(self, credential):
+        return db.session.query(User).get(credential.user_id)
+
+    def revoke_old_credential(self, credential):
+        credential.revoked = True
+        db.session.add(credential)
+        db.session.commit()
