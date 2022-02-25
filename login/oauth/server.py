@@ -1,4 +1,4 @@
-from authlib.integrations.flask_oauth2 import AuthorizationServer
+from authlib.integrations.flask_oauth2 import AuthorizationServer, ResourceProtector
 
 from login.database import db
 from login.models import Client, Token
@@ -17,7 +17,6 @@ def save_token(token_data, request):
         # or, depending on how you treat client_credentials
         # user_id = None
 
-    # TODO: Token initializer에 대한 추가 작성이 필요한가?
     token = Token(
         client_id=request.client.client_id,
         user_id=user_id,
@@ -28,3 +27,4 @@ def save_token(token_data, request):
 
 
 oauth_server = AuthorizationServer()
+require_oauth = ResourceProtector()

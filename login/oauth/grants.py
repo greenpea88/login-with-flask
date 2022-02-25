@@ -6,6 +6,12 @@ from login.database import db
 
 # authorization code grant의 방식으로 인증
 class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
+    TOKEN_ENDPOINT_AUTH_METHODS = [
+        'client_secret_basic',
+        'client_secret_post',
+        'none'
+    ]
+
     def save_authorization_code(self, code, request):
         client = request.client
         auth_code = AuthorizationCode(
@@ -25,6 +31,7 @@ class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
         if item and not item.is_expired():
             return item
 
+    # token을 받은 후 auth code 삭제
     def delete_authorization_code(self, authorization_code):
         db.session.delete(authorization_code)
         db.session.commit()

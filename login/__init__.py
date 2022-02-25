@@ -1,3 +1,4 @@
+from authlib.integrations.sqla_oauth2 import create_bearer_token_validator
 from flask import Flask, render_template
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -9,8 +10,8 @@ from login.extentions import login_manager
 from login.main import main
 from login.models import User, Connection, Client, Token, AuthorizationCode
 from login.oauth import oauth
-from login.oauth.grants import RefreshTokenGrant, PasswordGrant
-from login.oauth.server import oauth_server, query_client, save_token
+from login.oauth.grants import RefreshTokenGrant, PasswordGrant, AuthorizationCodeGrant
+from login.oauth.server import oauth_server, query_client, save_token, require_oauth
 
 
 def create_app():
@@ -22,7 +23,7 @@ def create_app():
 
     init_extensions(app)
     init_db(app)
-    init_oauth(app)
+    init_oauth(app, db.session)
 
     if app.debug:
         # debug mode 일 때만 admin page를 만들도록
@@ -49,11 +50,16 @@ def init_db(app):
     migrate.init_app(app, db)
 
 
-def init_oauth(app):
+def init_oauth(app, db_session):
     oauth_server.init_app(app, query_client=query_client, save_token=save_token)
-    oauth_server.register_grant(AuthorizationCode)
+
+    oauth_server.register_grant(AuthorizationCodeGrant)
     oauth_server.register_grant(PasswordGrant)
     oauth_server.register_grant(RefreshTokenGrant)
+
+    # 받은 token을 이용하여 bearer로 보내 protected info를 받아올 때 필요
+    # bearer_cls = create_bearer_token_validator(db_session, Token)
+    # require_oauth.register_token_validator(bearer_cls())
 
 
 def init_admin(app):
