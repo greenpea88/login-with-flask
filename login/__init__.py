@@ -3,6 +3,7 @@ from flask import Flask, render_template
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
+from login.api import api
 from login.auth import auth
 from login.config import config
 from login.database import db, migrate
@@ -36,6 +37,7 @@ def create_app():
     app.register_blueprint(main, url_prefix="/main")
     app.register_blueprint(auth, url_prefix="/auth")
     app.register_blueprint(oauth, url_prefix="/oauth")
+    app.register_blueprint(api, url_prefix="/api")
 
     return app
 
@@ -58,8 +60,8 @@ def init_oauth(app, db_session):
     oauth_server.register_grant(RefreshTokenGrant)
 
     # 받은 token을 이용하여 bearer로 보내 protected info를 받아올 때 필요
-    # bearer_cls = create_bearer_token_validator(db_session, Token)
-    # require_oauth.register_token_validator(bearer_cls())
+    bearer_cls = create_bearer_token_validator(db_session, Token)
+    require_oauth.register_token_validator(bearer_cls())
 
 
 def init_admin(app):

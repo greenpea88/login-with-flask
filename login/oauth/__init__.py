@@ -51,8 +51,7 @@ def authorize():
     return oauth_server.create_authorization_response(grant_user=None)
 
 
-# auth code를 받아 token 발급
+# token 발급
 @oauth.route('/token', methods=['POST'])
-@login_required
 def issue_token():
     return oauth_server.create_token_response()

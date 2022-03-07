@@ -22,6 +22,14 @@ class BaseConfig:
     KAKAO_AUTHORIZE_ENDPOINT = os.environ.get('KAKAO_AUTHORIZE_ENDPOINT')
     KAKAO_PROFILE_INFO_ENDPOINT = os.environ.get('KAKAO_PROFILE_INFO_ENDPOINT')
 
+    OAUTH2_REFRESH_TOKEN_GENERATOR = True
+    OAUTH2_TOKEN_EXPIRES_IN = {
+        'authorization_code': 864000,
+        'implicit': 3600,
+        'password': 864000,
+        'client_credentials': 864000
+    }
+
     def init_app(self, app):
         pass
 

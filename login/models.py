@@ -19,6 +19,12 @@ class User(db.Model):
     def to_entity(self):
         return UserEntity(self.id, self.email, self.name, self.password)
 
+    def get_user_id(self):
+        return self.id
+
+    def check_password(self, password):
+        return self.password == password
+
 
 class Connection(db.Model):
     __tablename__ = "connections"
@@ -55,6 +61,13 @@ class Token(db.Model, OAuth2TokenMixin):
         db.Integer, db.ForeignKey(User.id, ondelete='CASCADE')
     )
     user = db.relationship('User')
+
+    def is_refresh_token_valid(self):
+        return True
+
+    @property
+    def expires_at(self):
+        return self.get_expires_at()
 
 
 # [auth code] - code, redirect_uri, response_type, scope, client_id, nonce, auth_time
