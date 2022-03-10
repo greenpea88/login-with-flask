@@ -11,6 +11,7 @@ from login.extentions import login_manager
 from login.main import main
 from login.models import User, Connection, Client, Token, AuthorizationCode
 from login.oauth import oauth
+from login.oauth.endpoints import RevocationEndpoint, IntrospectionEndpoint
 from login.oauth.grants import RefreshTokenGrant, PasswordGrant, AuthorizationCodeGrant
 from login.oauth.server import oauth_server, query_client, save_token, require_oauth
 
@@ -58,6 +59,9 @@ def init_oauth(app, db_session):
     oauth_server.register_grant(AuthorizationCodeGrant)
     oauth_server.register_grant(PasswordGrant)
     oauth_server.register_grant(RefreshTokenGrant)
+
+    oauth_server.register_endpoint(RevocationEndpoint)
+    oauth_server.register_endpoint(IntrospectionEndpoint)
 
     # 받은 token을 이용하여 bearer로 보내 protected info를 받아올 때 필요
     bearer_cls = create_bearer_token_validator(db_session, Token)

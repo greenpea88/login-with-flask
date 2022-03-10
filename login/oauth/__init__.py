@@ -2,6 +2,7 @@ from authlib.oauth2 import OAuth2Error
 from flask import Blueprint, request, render_template, current_app
 from flask_login import current_user, login_required
 
+from login.oauth.endpoints import RevocationEndpoint, IntrospectionEndpoint
 from login.oauth.server import oauth_server
 
 oauth = Blueprint('oauth', __name__)
@@ -55,3 +56,13 @@ def authorize():
 @oauth.route('/token', methods=['POST'])
 def issue_token():
     return oauth_server.create_token_response()
+
+
+@oauth.route('/token/revoke', methods=['POST'])
+def revoke_token():
+    return oauth_server.create_endpoint_response(RevocationEndpoint.ENDPOINT_NAME)
+
+
+@oauth.route('/token/introspection', methods=['POST'])
+def introspection_token():
+    return oauth_server.create_endpoint_response(IntrospectionEndpoint.ENDPOINT_NAME)

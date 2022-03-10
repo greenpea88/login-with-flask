@@ -284,6 +284,14 @@ docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
 tests = ["pytest (>=6.0.0,<7.0.0)", "coverage[toml] (==5.0.4)"]
 
 [[package]]
+name = "q"
+version = "2.6"
+description = "Quick-and-dirty debugging output for tired programmers"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "requests"
 version = "2.27.1"
 description = "Python HTTP for Humans."
@@ -374,7 +382,7 @@ email = ["email-validator"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "466a199a33e2af58fcc775afe444fe1d76f621b633b01210f1fa451d30b7f441"
+content-hash = "8a7351b3e63b0e265c52636df0458cc89500800930e66f866cb46b850e7d061d"
 
 [metadata.files]
 alembic = [
@@ -710,6 +718,10 @@ pycparser = [
 pyjwt = [
     {file = "PyJWT-2.3.0-py3-none-any.whl", hash = "sha256:e0c4bb8d9f0af0c7f5b1ec4c5036309617d03d56932877f2f7a0beeb5318322f"},
     {file = "PyJWT-2.3.0.tar.gz", hash = "sha256:b888b4d56f06f6dcd777210c334e69c737be74755d3e5e9ee3fe67dc18a0ee41"},
+]
+q = [
+    {file = "q-2.6-py2.py3-none-any.whl", hash = "sha256:8687008a5b50ddc1c114392a37591cb4fbe082dcc8b02bdc6692689c69d08314"},
+    {file = "q-2.6.tar.gz", hash = "sha256:de0fcf5a439754975dd8022c3bf26374b882d0fe4265aab8813f4e87e057eed5"},
 ]
 requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
