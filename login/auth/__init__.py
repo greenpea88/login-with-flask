@@ -2,14 +2,48 @@ import jwt
 from urllib.parse import urlencode
 
 import requests
-from flask import Blueprint, request, render_template, url_for, redirect, current_app, abort
+from flask import Blueprint, request, render_template, url_for, redirect, current_app, abort, flash
 from flask_login import login_user, logout_user
 
+from login.auth.form import RegisterForm
 from login.models import User, Connection
 from login.database import db
 from login.proxy import user_repo
 
 auth = Blueprint('auth', __name__)
+
+
+@auth.route('/register', methods=['GET', 'POST'])
+def register():
+    # 회원가입
+    form = RegisterForm()
+
+    if request.method == 'POST':
+        # username = request.form.get('username')
+        # email = request.form.get('email')
+        # password = request.form.get('password')
+        # password_confirm = request.form.get('password_confirm')
+
+        if form.validate_on_submit():
+            username = form.data.get('username')
+            email = form.data.get('email')
+            password = form.data.get('password')
+
+
+            user = User()
+            user.email = email
+            user.name = username
+            user.password = password
+
+            db.session.add(user)
+            db.session.commit()
+
+            flash('회원 가입이 완료되었습니다.')
+            return redirect(url_for('index'))
+        else:
+            flash('입력한 값을 확인해주세요.')
+
+    return render_template('auth/register.html', form=form)
 
 
 @auth.route('/login', methods=['GET', 'POST'])

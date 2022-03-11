@@ -1,0 +1,37 @@
+<h1>Login</h1>
+
+{% if error %}
+<div>{{ error }}</div>
+{% endif  %}
+
+<form method="post">
+  {{ form.csrf_token }}
+    <div>
+      {{ form.username.label() }}
+      {{ form.username() }}
+    </div>
+    <div>
+        {{ form.email.label() }}
+        {{ form.email() }}
+    </div>
+    <div>
+        {{ form.password.label() }}
+        {{ form.password() }}
+    </div>
+    <div>
+        {{ form.password_confirm.label() }}
+        {{ form.password_confirm() }}
+    </div>
+    <div>
+        {{ form.accept_tos.label() }}
+        {{ form.accept_tos() }}
+    </div>
+  <div>
+    <button type="submit" class="btn btn-primary">Register</button>
+  </div>
+</form>
+
+<ul>
+  <li><a href="{{ url_for('auth.authorize', target='google') }}">구글 계정으로 로그인</a></li>
+  <li><a href="{{ url_for('auth.authorize', target='kakao') }}">카카오 계정으로 로그인</a></li>
+</ul>
